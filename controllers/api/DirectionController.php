@@ -2,37 +2,21 @@
 
 namespace app\controllers\api;
 
+use app\services\DirectionService;
 use app\models\Direction;
 use Yii;
-use yii\db\Query;
 use yii\web\Controller;
 
 class DirectionController extends Controller
 {
     public function actionIndex()
     {
-        return response(array_map(fn($direction) => [
-            'id' => $direction['id'],
-            'city_id' => $direction['city_id'],
-            'country_id' => $direction['country_id'],
-            'price' => $direction['price'],
-            'cur' => $direction['cur'],
-        ], (new Query)->from(Direction::tableName())->all()));
+        return response(DirectionService::get());
     }
 
     public function actionView($id)
     {
-        $direction = (new Query)->from(Direction::tableName())
-            ->where(['id' => $id])
-            ->one();
-
-        return response([
-            'id' => $direction['id'],
-            'city_id' => $direction['city_id'],
-            'country_id' => $direction['country_id'],
-            'price' => $direction['price'],
-            'cur' => $direction['cur'],
-        ]);
+        return response(DirectionService::find($id));
     }
 
     public function actionStore()
