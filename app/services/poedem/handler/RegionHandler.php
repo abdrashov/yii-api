@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Poedem\Handler;
+namespace app\services\poedem\handler;
 
 use yii\db\Query;
 
@@ -25,18 +25,18 @@ class RegionHandler extends HandlerAbstract
 
     public function apply(): void
     {
-        $exists = (new Query)->from(static::TABLE)
-            ->where(['api_id' => $this->id])
-            ->exists();
-
         $country = (new Query)->from(CountyHandler::TABLE)
             ->where(['api_id' => $this->id])
             ->one();
 
         foreach ($this->content as $content) {
+            $exists = (new Query)->from(static::TABLE)
+                ->where(['api_id' => $content['id']])
+                ->exists();
+
             if ($exists) {
                 $this->update([
-                    'api_id' => $this->id,
+                    'api_id' => $content['id'],
                     'country_id' => $country['id'],
                     'name' => $content['name'],
                     'price' => $content['price'],
@@ -45,7 +45,7 @@ class RegionHandler extends HandlerAbstract
                 ]);
             } else {
                 $this->insert([
-                    'api_id' => $this->id,
+                    'api_id' => $content['id'],
                     'country_id' => $country['id'],
                     'name' => $content['name'],
                     'price' => $content['price'],

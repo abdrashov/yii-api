@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Poedem;
+namespace app\services\poedem;
 
 use Yii;
 

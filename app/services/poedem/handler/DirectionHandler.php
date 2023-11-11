@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Services\Poedem\Handler;
+namespace app\services\poedem\handler;
 
+use Yii;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
@@ -51,7 +52,8 @@ class DirectionHandler extends HandlerAbstract
             }
 
             $direction = array_filter($directions, fn($direction) => $direction['country_id'] == $country_id);
-            $direction = $direction ? $direction[0] : null;
+            $direction = array_values($direction);
+            $direction = array_key_exists(0, $direction) ? $direction[0] : null;
 
 
             if ($direction) {
@@ -61,32 +63,24 @@ class DirectionHandler extends HandlerAbstract
                     'price' => $content['price'],
                     'cur' => $content['cur'],
                 ]);
+            } else {
+                $connection = Yii::$app->db;
+                $command = $connection->createCommand()->insert(static::TABLE, [
+                    'city_id' => $city['id'],
+                    'country_id' => $country_id,
+                    'price' => $content['price'],
+                    'cur' => $content['cur'],
+                ]);
+                $command->execute();
 
-                foreach ($content['days'] as $day) {
-                    (new Query())->createCommand()->insert('direction_days', [
-                        'direction_id' => $direction['id'],
-                        'day' => $day
-                    ])->execute();
-                }
-
-                foreach ($content['defaultDate'] as $date) {
-                    (new Query())->createCommand()->insert('direction_dates', [
-                        'direction_id' => $direction['id'],
-                        'date' => $date
-                    ])->execute();
-                }
-
-                break;
+                $direction = (new Query)->from(static::TABLE)
+                    ->where(['id' => $connection->getLastInsertID()])
+                    ->one();
             }
 
-            $direction = $this->insert([
-                'city_id' => $city['id'],
-                'country_id' => $country_id,
-                'price' => $content['price'],
-                'cur' => $content['cur'],
-            ]);
-
-            dd($direction);
+            (new Query())->createCommand()->delete('direction_days', [
+                'direction_id' => $direction['id'],
+            ])->execute();
 
             foreach ($content['days'] as $day) {
                 (new Query())->createCommand()->insert('direction_days', [
@@ -94,6 +88,10 @@ class DirectionHandler extends HandlerAbstract
                     'day' => $day
                 ])->execute();
             }
+
+            (new Query())->createCommand()->delete('direction_dates', [
+                'direction_id' => $direction['id'],
+            ])->execute();
 
             foreach ($content['defaultDate'] as $date) {
                 (new Query())->createCommand()->insert('direction_dates', [

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Poedem;
+namespace app\services\poedem;
 
 class PoedemService
 {
@@ -8,11 +8,11 @@ class PoedemService
     private array $content;
 
     private array $handler = [
-        \App\Services\Poedem\Handler\CityHandler::class,
-        \App\Services\Poedem\Handler\CountyHandler::class,
-        \App\Services\Poedem\Handler\DirectionHandler::class,
-        \App\Services\Poedem\Handler\MealHandler::class,
-        \App\Services\Poedem\Handler\RegionHandler::class,
+        \app\services\poedem\handler\CityHandler::class,
+        \app\services\poedem\handler\CountyHandler::class,
+        \app\services\poedem\handler\DirectionHandler::class,
+        \app\services\poedem\handler\MealHandler::class,
+        \app\services\poedem\handler\RegionHandler::class,
     ];
 
     public function setContent(): void

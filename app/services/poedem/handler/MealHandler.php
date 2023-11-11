@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Services\Poedem\Handler;
+namespace app\services\poedem\handler;
 
 use yii\db\Query;
 
-class CityHandler extends HandlerAbstract
+class MealHandler  extends HandlerAbstract
 {
-    public const TABLE = 'cities';
+    public const TABLE = 'meals';
 
-    public const JSON_KEY = 'cities';
+    public const JSON_KEY = 'meals';
 
     private int $id;
     private array $content;
@@ -41,8 +41,6 @@ class CityHandler extends HandlerAbstract
         (new Query())->createCommand()->insert(static::TABLE, [
             'api_id' => $content['api_id'],
             'name' => $content['name'],
-            'name_from' => $content['nameFrom'],
-            'sort' => $content['sort'],
         ])->execute();
     }
 
@@ -50,8 +48,6 @@ class CityHandler extends HandlerAbstract
     {
         (new Query())->createCommand()->update(static::TABLE, [
             'name' => $content['name'],
-            'name_from' => $content['nameFrom'],
-            'sort' => $content['sort'],
         ], [
             'api_id' => $content['api_id'],
         ])->execute();

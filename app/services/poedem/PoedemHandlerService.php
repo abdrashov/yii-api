@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Services\Poedem;
+namespace app\services\poedem;
 
-use App\Services\Poedem\Handler\HandlerAbstract;
-use App\Services\Poedem\Handler\HandlerInterface;
+use app\services\poedem\handler\HandlerAbstract;
+use app\services\poedem\handler\HandlerInterface;
 
 class PoedemHandlerService
 {

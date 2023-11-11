@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Poedem\Handler;
+namespace app\services\poedem\handler;
 
 abstract class HandlerAbstract
 {
