@@ -22,6 +22,13 @@ class DirectionDateService
             ->all();
     }
 
+    public static function delete(int $direction_id): void
+    {
+        (new Query())->createCommand()->delete(DirectionDate::tableName(), [
+            'direction_id' => $direction_id
+        ])->execute();
+    }
+
     public static function insert(int $direction_id, array $dates): void
     {
         array_map(fn($date) => (new Query())->createCommand()->insert(DirectionDate::tableName(), [

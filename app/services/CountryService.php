@@ -31,9 +31,18 @@ class CountryService
             ->one() ?: [];
     }
 
-    public static function insert(array $content): void
+    public static function store(array $request): array
     {
-        (new Query())->createCommand()->insert(Country::tableName(), $content)->execute();
+        $connection = Yii::$app->db;
+
+        $connection->createCommand()->insert(Country::tableName(), [
+            'city_id' => $request['city_id'],
+            'api_id' => $request['api_id'],
+            'name' => $request['name'],
+            'nameTo' => $request['name_to'],
+        ])->execute();
+
+        return static::find($connection->getLastInsertID());
     }
 
     public static function update(array $country, array $content): void

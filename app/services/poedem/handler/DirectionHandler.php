@@ -4,6 +4,7 @@ namespace app\services\poedem\handler;
 
 use app\models\City;
 use app\models\Country;
+use app\services\CountryDepartService;
 use app\services\DirectionDateService;
 use app\services\DirectionDayService;
 use app\services\DirectionService;
@@ -37,11 +38,14 @@ class DirectionHandler
                     'price' => $content['price'],
                     'cur' => $content['cur'],
                 ]);
-
-                DirectionDayService::updateOrInsert($direction['id'], $content['dates']);
-
-                DirectionDateService::updateOrInsert($direction['id'], $content['dates']);
             }
+
+
+            DirectionDayService::delete($direction['id']);
+            DirectionDayService::insert($direction['id'], $content['days']);
+
+            DirectionDateService::delete($direction['id']);
+            DirectionDateService::insert($direction['id'], $content['dates']);
         }
     }
 

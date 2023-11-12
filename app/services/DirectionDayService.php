@@ -2,6 +2,7 @@
 
 namespace app\services;
 
+use app\models\DirectionDate;
 use app\models\DirectionDay;
 use yii\db\Query;
 
@@ -20,6 +21,13 @@ class DirectionDayService
         return (new Query)->from(DirectionDay::tableName())
             ->where(['in', 'direction_id', $ids])
             ->all();
+    }
+
+    public static function delete(int $direction_id): void
+    {
+        (new Query())->createCommand()->delete(DirectionDay::tableName(), [
+            'direction_id' => $direction_id
+        ])->execute();
     }
 
     public static function insert(int $direction_id, array $days): void
