@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\services\DirectionService;
 use yii\base\Model;
 
 class Direction extends Model
@@ -20,8 +21,16 @@ class Direction extends Model
     {
         return [
             [['city_id', 'country_id', 'price', 'cur'], 'required'],
+            [['city_id', 'country_id'], 'validateUniqueness'],
             [['price'], 'number'],
             [['cur'], 'string', 'max' => 5],
         ];
+    }
+
+    public function validateUniqueness($attribute)
+    {
+        if (DirectionService::checkExistByCityIdCountyId($this->attributes['city_id'], $this->attributes['country_id'])) {
+            $this->addError($attribute, 'This already exists.');
+        }
     }
 }

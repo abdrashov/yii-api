@@ -28,6 +28,14 @@ return [
     ],
     [
         'class' => 'yii\rest\UrlRule',
+        'controller' => 'api/direction-day'
+    ],
+    [
+        'class' => 'yii\rest\UrlRule',
+        'controller' => 'api/direction-date'
+    ],
+    [
+        'class' => 'yii\rest\UrlRule',
         'controller' => 'api/list'
     ],
 ];

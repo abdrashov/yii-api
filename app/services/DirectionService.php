@@ -3,6 +3,7 @@
 namespace app\services;
 
 use app\models\Direction;
+use Yii;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
@@ -35,6 +36,31 @@ class DirectionService
         $directionDates = DirectionDateService::getByDirectionIds([$direction['id']]);
 
         return static::normalize($direction, $directionDays, $directionDates);
+    }
+
+    public static function store(array $request): array
+    {
+        $connection = Yii::$app->db;
+
+        $connection->createCommand()->insert(Direction::tableName(), [
+            'city_id' => $request['city_id'],
+            'country_id' => $request['country_id'],
+            'price' => $request['price'],
+            'cur' => $request['cur'],
+        ])->execute();
+
+        return static::find($connection->getLastInsertID());
+    }
+
+    public static function checkExistByCityIdCountyId(int $city_id, int $country_id): bool
+    {
+        return (new Query)->from(Direction::tableName())
+            ->where([
+                'and',
+                ['city_id' => $city_id],
+                ['country_id' => $country_id],
+            ])
+            ->exists();
     }
 
     private static function normalize(array $direction, array $directionDays, array $directionDates): array

@@ -5,10 +5,14 @@ namespace app\controllers\api;
 use app\models\City;
 use app\models\Country;
 use app\models\Direction;
+use app\models\DirectionDate;
+use app\models\DirectionDay;
 use app\models\Meal;
 use app\models\Region;
 use app\services\CityService;
 use app\services\CountryService;
+use app\services\DirectionDateService;
+use app\services\DirectionDayService;
 use app\services\DirectionService;
 use app\services\MealService;
 use app\services\RegionService;
@@ -24,6 +28,8 @@ class ListController extends Controller
             Direction::tableName(), DirectionService::get(),
             Meal::tableName(), MealService::get(),
             Region::tableName(), RegionService::get(),
+            DirectionDay::tableName(), DirectionDayService::get(),
+            DirectionDate::tableName(), DirectionDateService::get(),
         ]);
     }
 }

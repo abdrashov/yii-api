@@ -2,9 +2,14 @@
 
 namespace app\controllers\api;
 
-use app\services\DirectionService;
 use app\models\Direction;
+use app\models\DirectionDate;
+use app\models\DirectionDay;
+use app\services\DirectionDateService;
+use app\services\DirectionDayService;
+use app\services\DirectionService;
 use Yii;
+use yii\db\Query;
 use yii\web\Controller;
 
 class DirectionController extends Controller
@@ -21,12 +26,34 @@ class DirectionController extends Controller
 
     public function actionStore()
     {
-        $direction = new Direction();
-        $direction->load(['Direction' => Yii::$app->request->get()]);
+        $request = Yii::$app->request->get();
 
-        if (!$direction->validate()) {
-            return response($direction->errors, 422);
+        $direction = new Direction();
+        $direction->load(['Direction' => $request]);
+
+        $directionDay = new DirectionDay();
+        $directionDay->setScenario('create');
+        $directionDay->load(['DirectionDay' => $request]);
+
+        $directionDate = new DirectionDate();
+        $directionDate->setScenario('create');
+        $directionDate->load(['DirectionDate' => $request]);
+
+        if (!($direction->validate() & $directionDay->validate() & $directionDate->validate())) {
+            return response($direction->errors + $directionDay->errors + $directionDate->errors, 422);
         }
+
+        $direction = DirectionService::store($request);
+
+        DirectionDayService::insert([
+            'direction_id' => $direction['id'],
+            'days' => $request['day']
+        ]);
+
+        DirectionDateService::insert([
+            'direction_id' => $direction['id'],
+            'dates' => $request['date']
+        ]);
 
         return response([
             'message' => 'Successful'

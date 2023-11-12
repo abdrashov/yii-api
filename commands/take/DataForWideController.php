@@ -3,7 +3,7 @@
 namespace app\commands\take;
 
 
-use App\Services\Poedem\PoedemService;
+use app\services\poedem\PoedemService;
 use Yii;
 use yii\console\Controller;
 use yii\console\ExitCode;
