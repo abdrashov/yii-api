@@ -21,7 +21,26 @@ class MealService
             ->where(['id' => $id])
             ->one();
 
-        return static::normalize($meal);
+        return $meal ? static::normalize($meal) : [];
+    }
+
+    public static function findByApiId(int $api_id): array
+    {
+        return (new Query)->from(Meal::tableName())
+            ->where(['api_id' => $api_id])
+            ->one() ?: [];
+    }
+
+    public static function insert(array $content): void
+    {
+        (new Query())->createCommand()->insert(Meal::tableName(), $content)->execute();
+    }
+
+    public static function update(array $meal, array $content): void
+    {
+        (new Query())->createCommand()->update(Meal::tableName(), $content, [
+            'id' => $meal['id'],
+        ])->execute();
     }
 
     private static function normalize(array $meal): array

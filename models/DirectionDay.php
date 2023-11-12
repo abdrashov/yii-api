@@ -12,7 +12,7 @@ class DirectionDay extends Model
 
     public static function tableName()
     {
-        return '{{direction_days}}';
+        return 'direction_days';
     }
 
     public function rules()

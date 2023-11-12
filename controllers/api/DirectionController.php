@@ -9,7 +9,6 @@ use app\services\DirectionDateService;
 use app\services\DirectionDayService;
 use app\services\DirectionService;
 use Yii;
-use yii\db\Query;
 use yii\web\Controller;
 
 class DirectionController extends Controller
@@ -45,15 +44,9 @@ class DirectionController extends Controller
 
         $direction = DirectionService::store($request);
 
-        DirectionDayService::insert([
-            'direction_id' => $direction['id'],
-            'days' => $request['day']
-        ]);
+        DirectionDayService::insert($direction['id'], $request['day']);
 
-        DirectionDateService::insert([
-            'direction_id' => $direction['id'],
-            'dates' => $request['date']
-        ]);
+        DirectionDateService::insert($direction['id'], $request['date']);
 
         return response([
             'message' => 'Successful'

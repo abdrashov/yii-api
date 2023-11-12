@@ -21,7 +21,26 @@ class RegionService
             ->where(['id' => $id])
             ->one();
 
-        return static::normalize($region);
+        return $region ? static::normalize($region) : [];
+    }
+
+    public static function findByApiId(int $api_id): array
+    {
+        return (new Query)->from(Region::tableName())
+            ->where(['api_id' => $api_id])
+            ->one() ?: [];
+    }
+
+    public static function insert(array $content): void
+    {
+        (new Query())->createCommand()->insert(Region::tableName(), $content)->execute();
+    }
+
+    public static function update(array $region, array $content): void
+    {
+        (new Query())->createCommand()->update(Region::tableName(), $content, [
+            'id' => $region['id'],
+        ])->execute();
     }
 
     private static function normalize(array $region): array
@@ -29,7 +48,7 @@ class RegionService
         return [
             'id' => $region['id'],
             'api_id' => $region['api_id'],
-            'country_id' => $region['country_id'],
+            'region_id' => $region['region_id'],
             'name' => $region['name'],
             'price' => $region['price'],
             'cur' => $region['cur'],

@@ -8,6 +8,6 @@ class Meal extends ActiveRecord
 {
     public static function tableName()
     {
-        return '{{meals}}';
+        return 'meals';
     }
 }

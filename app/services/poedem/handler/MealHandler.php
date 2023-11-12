@@ -2,54 +2,37 @@
 
 namespace app\services\poedem\handler;
 
-use yii\db\Query;
+use app\services\MealService;
 
-class MealHandler  extends HandlerAbstract
+class MealHandler
 {
-    public const TABLE = 'meals';
-
-    public const JSON_KEY = 'meals';
-
-    private int $id;
     private array $content;
 
-    public function setId(int $id)
-    {
-        $this->id = $id;
-    }
-
-    public function setContent(array $content)
+    public function __construct(array $content)
     {
         $this->content = $content;
     }
 
     public function apply(): void
     {
-        $exists = (new Query)->from(static::TABLE)
-            ->where(['api_id' => $this->id])
-            ->exists();
+        $this->handler();
 
-        if ($exists) {
-            $this->update($this->content + ['api_id' => $this->id]);
-        } else {
-            $this->insert($this->content + ['api_id' => $this->id]);
+        foreach ($this->handler() as $content) {
+            if ($meal = MealService::findByApiId($content['api_id'])) {
+                MealService::update($meal, $content);
+            } else {
+                MealService::insert($content);
+            }
         }
     }
 
-    public function insert(array $content): void
+    public function handler()
     {
-        (new Query())->createCommand()->insert(static::TABLE, [
-            'api_id' => $content['api_id'],
-            'name' => $content['name'],
-        ])->execute();
-    }
-
-    public function update(array $content): void
-    {
-        (new Query())->createCommand()->update(static::TABLE, [
-            'name' => $content['name'],
-        ], [
-            'api_id' => $content['api_id'],
-        ])->execute();
+        foreach ($this->content as $key => $content) {
+            yield [
+                'api_id' => $key,
+                'name' => $content['name'],
+            ];
+        }
     }
 }

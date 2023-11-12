@@ -14,7 +14,7 @@ class Direction extends Model
 
     public static function tableName()
     {
-        return '{{directions}}';
+        return 'directions';
     }
 
     public function rules()
@@ -29,7 +29,7 @@ class Direction extends Model
 
     public function validateUniqueness($attribute)
     {
-        if (DirectionService::checkExistByCityIdCountyId($this->attributes['city_id'], $this->attributes['country_id'])) {
+        if (DirectionService::existByCityIdCountryId($this->attributes['city_id'], $this->attributes['country_id'])) {
             $this->addError($attribute, 'This already exists.');
         }
     }

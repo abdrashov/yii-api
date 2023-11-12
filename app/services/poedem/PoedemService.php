@@ -4,39 +4,30 @@ namespace app\services\poedem;
 
 class PoedemService
 {
-    private string $url;
     private array $content;
 
-    private array $handler = [
-        \app\services\poedem\handler\CityHandler::class,
-        \app\services\poedem\handler\CountyHandler::class,
-        \app\services\poedem\handler\DirectionHandler::class,
-        \app\services\poedem\handler\MealHandler::class,
-        \app\services\poedem\handler\RegionHandler::class,
+    private static $attribute = [
+        'cities' => \app\services\poedem\handler\CityHandler::class,
+        'countries' => \app\services\poedem\handler\CountryHandler::class,
+        'directions' => \app\services\poedem\handler\DirectionHandler::class,
+        'meals' => \app\services\poedem\handler\MealHandler::class,
+        'regions' => \app\services\poedem\handler\RegionHandler::class,
     ];
 
-    public function setContent(): void
+    public function __construct(string $url)
     {
-        $this->content = (new PoedemApiService)->getContent($this->url);
-    }
-
-    public function setUrl(string $url): void
-    {
-        $this->url = $url;
+        $this->content = (new PoedemApiService)->getContent($url);
     }
 
     public function apply(): void
     {
-        foreach ($this->handler as $handler) {
-            $handler = new $handler;
-
-            if (!array_key_exists($handler::JSON_KEY, $this->content)) {
+        foreach (static::$attribute as $json_key => $attribute) {
+            if (!array_key_exists($json_key, $this->content)) {
                 continue;
             }
 
-            new PoedemHandlerService($handler, $this->content[$handler::JSON_KEY]);
+            (new $attribute($this->content[$json_key]))
+                ->apply();
         }
-
-        dd($this->content);
     }
 }

@@ -8,6 +8,6 @@ class Region extends ActiveRecord
 {
     public static function tableName()
     {
-        return '{{regions}}';
+        return 'regions';
     }
 }

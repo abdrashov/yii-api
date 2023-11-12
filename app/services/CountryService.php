@@ -21,7 +21,26 @@ class CountryService
             ->where(['id' => $id])
             ->one();
 
-        return static::normalize($country);
+        return $country ? static::normalize($country) : [];
+    }
+
+    public static function findByApiId(int $api_id): array
+    {
+        return (new Query)->from(Country::tableName())
+            ->where(['api_id' => $api_id])
+            ->one() ?: [];
+    }
+
+    public static function insert(array $content): void
+    {
+        (new Query())->createCommand()->insert(Country::tableName(), $content)->execute();
+    }
+
+    public static function update(array $country, array $content): void
+    {
+        (new Query())->createCommand()->update(Country::tableName(), $content, [
+            'id' => $country['id'],
+        ])->execute();
     }
 
     private static function normalize(array $country): array

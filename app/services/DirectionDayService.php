@@ -2,7 +2,6 @@
 
 namespace app\services;
 
-use app\models\Country;
 use app\models\DirectionDay;
 use yii\db\Query;
 
@@ -23,13 +22,19 @@ class DirectionDayService
             ->all();
     }
 
-    public static function insert(array $request): void
+    public static function insert(int $direction_id, array $days): void
     {
-        array_map(function ($day) use ($request) {
-            (new Query())->createCommand()->insert(DirectionDay::tableName(), [
-                'direction_id' => $request['direction_id'],
-                'day' => $day
-            ])->execute();
-        }, $request['days']);
+        array_map(fn($day) => (new Query())->createCommand()->insert(DirectionDay::tableName(), [
+            'direction_id' => $direction_id,
+            'day' => $day
+        ])->execute(), $days);
+    }
+
+    public static function updateOrInsert(int $direction_id, array $days): void
+    {
+        array_map(fn($day) => (new Query())->createCommand()->upsert(DirectionDay::tableName(), [
+            'direction_id' => $direction_id,
+            'day' => $day
+        ])->execute(), $days);
     }
 }

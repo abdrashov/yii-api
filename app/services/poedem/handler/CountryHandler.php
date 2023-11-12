@@ -2,9 +2,9 @@
 
 namespace app\services\poedem\handler;
 
-use app\services\CityService;
+use app\services\CountryService;
 
-class CityHandler
+class CountryHandler
 {
     private array $content;
 
@@ -18,10 +18,10 @@ class CityHandler
         $this->handler();
 
         foreach ($this->handler() as $content) {
-            if ($city = CityService::findByApiId($content['api_id'])) {
-                CityService::update($city, $content);
+            if ($city = CountryService::findByApiId($content['api_id'])) {
+                CountryService::update($city, $content);
             } else {
-                CityService::insert($content);
+                CountryService::insert($content);
             }
         }
     }
@@ -32,7 +32,8 @@ class CityHandler
             yield [
                 'api_id' => $key,
                 'name' => $content['name'],
-                'name_from' => $content['nameFrom'],
+                'name_to' => $content['nameTo'],
+                'to' => $content['to'],
                 'sort' => $content['sort'],
             ];
         }

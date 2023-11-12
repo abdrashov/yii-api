@@ -8,6 +8,6 @@ class Country extends ActiveRecord
 {
     public static function tableName()
     {
-        return '{{countries}}';
+        return 'countries';
     }
 }

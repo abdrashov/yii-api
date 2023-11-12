@@ -2,6 +2,7 @@
 
 namespace app\services;
 
+use app\models\City;
 use app\models\Direction;
 use Yii;
 use yii\db\Query;
@@ -32,6 +33,8 @@ class DirectionService
             ->where(['id' => $id])
             ->one();
 
+        if (!$direction) return [];
+
         $directionDays = DirectionDayService::getByDirectionIds([$direction['id']]);
         $directionDates = DirectionDateService::getByDirectionIds([$direction['id']]);
 
@@ -52,7 +55,25 @@ class DirectionService
         return static::find($connection->getLastInsertID());
     }
 
-    public static function checkExistByCityIdCountyId(int $city_id, int $country_id): bool
+    public static function findByCityIdCountryId(int $city_id, int $country_id): array
+    {
+        return (new Query)->from(Direction::tableName())
+            ->where([
+                'and',
+                ['city_id' => $city_id],
+                ['country_id' => $country_id],
+            ])
+            ->one() ?: [];
+    }
+
+    public static function update(array $direction, array $content): void
+    {
+        (new Query())->createCommand()->update(Direction::tableName(), $content, [
+            'id' => $direction['id'],
+        ])->execute();
+    }
+
+    public static function existByCityIdCountryId(int $city_id, int $country_id): bool
     {
         return (new Query)->from(Direction::tableName())
             ->where([

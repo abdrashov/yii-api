@@ -21,7 +21,26 @@ class CityService
             ->where(['id' => $id])
             ->one();
 
-        return static::normalize($city);
+        return $city ? static::normalize($city) : [];
+    }
+
+    public static function findByApiId(int $api_id): array
+    {
+        return (new Query)->from(City::tableName())
+            ->where(['api_id' => $api_id])
+            ->one() ?: [];
+    }
+
+    public static function insert(array $content): void
+    {
+        (new Query())->createCommand()->insert(City::tableName(), $content)->execute();
+    }
+
+    public static function update(array $city, array $content): void
+    {
+        (new Query())->createCommand()->update(City::tableName(), $content, [
+            'id' => $city['id'],
+        ])->execute();
     }
 
     private static function normalize(array $city): array

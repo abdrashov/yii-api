@@ -2,82 +2,51 @@
 
 namespace app\services\poedem\handler;
 
+use app\models\Country;
+use app\services\RegionService;
 use yii\db\Query;
 
-class RegionHandler extends HandlerAbstract
+class RegionHandler
 {
-    public const TABLE = 'regions';
-
-    public const JSON_KEY = 'regions';
-
-    private int $id;
     private array $content;
 
-    public function setId(int $id)
-    {
-        $this->id = $id;
-    }
-
-    public function setContent(array $content)
+    public function __construct(array $content)
     {
         $this->content = $content;
     }
 
     public function apply(): void
     {
-        $country = (new Query)->from(CountyHandler::TABLE)
-            ->where(['api_id' => $this->id])
-            ->one();
+        $this->handler();
 
-        foreach ($this->content as $content) {
-            $exists = (new Query)->from(static::TABLE)
-                ->where(['api_id' => $content['id']])
-                ->exists();
-
-            if ($exists) {
-                $this->update([
-                    'api_id' => $content['id'],
-                    'country_id' => $country['id'],
-                    'name' => $content['name'],
-                    'price' => $content['price'],
-                    'cur' => $content['cur'],
-                    'popularity' => $content['popularity'],
-                ]);
+        foreach ($this->handler() as $content) {
+            if ($region = RegionService::findByApiId($content['api_id'])) {
+                RegionService::update($region, $content);
             } else {
-                $this->insert([
-                    'api_id' => $content['id'],
-                    'country_id' => $country['id'],
-                    'name' => $content['name'],
-                    'price' => $content['price'],
-                    'cur' => $content['cur'],
-                    'popularity' => $content['popularity'],
-                ]);
+                RegionService::insert($content);
             }
         }
     }
 
-    public function insert(array $content): void
+    public function handler()
     {
-        (new Query())->createCommand()->insert(static::TABLE, [
-            'api_id' => $content['api_id'],
-            'country_id' => $content['country_id'],
-            'name' => $content['name'],
-            'price' => $content['price'],
-            'cur' => $content['cur'],
-            'popularity' => $content['popularity'],
-        ])->execute();
-    }
+        $countries = (new Query)->from(Country::tableName())
+            ->where(['in', 'api_id', array_keys($this->content)])
+            ->all();
 
-    public function update(array $content): void
-    {
-        (new Query())->createCommand()->update(static::TABLE, [
-            'country_id' => $content['country_id'],
-            'name' => $content['name'],
-            'price' => $content['price'],
-            'cur' => $content['cur'],
-            'popularity' => $content['popularity'],
-        ], [
-            'api_id' => $content['api_id'],
-        ])->execute();
+        foreach ($this->content as $api_country_id => $contents) {
+            foreach ($contents as $content) {
+                $country = array_values(array_filter($countries, fn($country) => $country['api_id'] == $api_country_id))[0];
+
+                yield [
+                    'api_id' => $content['id'],
+                    'country_id' => $country['id'],
+                    'name' => $content['name'],
+                    'price' => $content['price'],
+                    'cur' => $content['cur'],
+                    'popularity' => $content['popularity'],
+                ];
+            }
+        }
     }
 }
