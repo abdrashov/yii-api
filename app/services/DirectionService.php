@@ -2,7 +2,6 @@
 
 namespace app\services;
 
-use app\models\City;
 use app\models\Direction;
 use Yii;
 use yii\db\Query;
@@ -41,16 +40,11 @@ class DirectionService
         return static::normalize($direction, $directionDays, $directionDates);
     }
 
-    public static function store(array $request): array
+    public static function store(array $content): array
     {
         $connection = Yii::$app->db;
 
-        $connection->createCommand()->insert(Direction::tableName(), [
-            'city_id' => $request['city_id'],
-            'country_id' => $request['country_id'],
-            'price' => $request['price'],
-            'cur' => $request['cur'],
-        ])->execute();
+        $connection->createCommand()->insert(Direction::tableName(), $content)->execute();
 
         return static::find($connection->getLastInsertID());
     }
@@ -92,8 +86,8 @@ class DirectionService
             'country_id' => $direction['country_id'],
             'price' => $direction['price'],
             'cur' => $direction['cur'],
-            'days' => $directionDays,
-            'defaultDate' => $directionDates,
+            'days' => array_values(ArrayHelper::getColumn($directionDays, 'day')),
+            'defaultDate' => array_values(ArrayHelper::getColumn($directionDates, 'date')),
         ];
     }
 }

@@ -14,6 +14,6 @@ class CountryController extends Controller
 
     public function actionView($id)
     {
-        return response(CountryService::find($id));
+        return response($country = CountryService::find($id), $country ? 200 : 404);
     }
 }

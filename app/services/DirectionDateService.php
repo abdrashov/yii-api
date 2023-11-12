@@ -36,12 +36,4 @@ class DirectionDateService
             'date' => $date
         ])->execute(), $dates);
     }
-
-    public static function updateOrInsert(int $direction_id, array $dates): void
-    {
-        array_map(fn($date) => (new Query())->createCommand()->upsert(DirectionDate::tableName(), [
-            'direction_id' => $direction_id,
-            'date' => $date
-        ])->execute(), $dates);
-    }
 }

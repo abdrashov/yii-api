@@ -19,9 +19,15 @@ class MealHandler
 
         foreach ($this->handler() as $content) {
             if ($meal = MealService::findByApiId($content['api_id'])) {
-                MealService::update($meal, $content);
+                MealService::update($meal, [
+                    'api_id' => $content['api_id'],
+                    'name' => $content['name'],
+                ]);
             } else {
-                MealService::insert($content);
+                MealService::insert([
+                    'api_id' => $content['api_id'],
+                    'name' => $content['name'],
+                ]);
             }
         }
     }

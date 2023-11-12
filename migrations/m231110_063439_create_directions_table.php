@@ -1,7 +1,6 @@
 <?php
 
 use yii\db\Migration;
-use yii\db\Schema;
 
 /**
  * Handles the creation of table `{{%directions}}`.
@@ -22,9 +21,10 @@ class m231110_063439_create_directions_table extends Migration
         ]);
 
         $this->createIndex(
-            'idx-directions-city_id',
+            'idx-unique-directions-city_id-country_id',
             'directions',
-            'city_id'
+            'city_id, country_id',
+            true
         );
 
         $this->addForeignKey(
@@ -34,12 +34,6 @@ class m231110_063439_create_directions_table extends Migration
             'cities',
             'id',
             'CASCADE'
-        );
-
-        $this->createIndex(
-            'idx-directions-country_id',
-            'directions',
-            'country_id'
         );
 
         $this->addForeignKey(
@@ -62,18 +56,13 @@ class m231110_063439_create_directions_table extends Migration
             'directions'
         );
 
-        $this->dropIndex(
-            'idx-directions-city_id',
-            'directions'
-        );
-
         $this->dropForeignKey(
             'fk-directions-country_id',
             'directions'
         );
 
         $this->dropIndex(
-            'idx-directions-country_id',
+            'idx-unique-directions-city_id-country_id',
             'directions'
         );
 

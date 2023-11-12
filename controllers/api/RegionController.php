@@ -14,6 +14,6 @@ class RegionController extends Controller
 
     public function actionView($id)
     {
-        return response(RegionService::find($id));
+        return response($region = RegionService::find($id), $region ? 200 : 404);
     }
 }

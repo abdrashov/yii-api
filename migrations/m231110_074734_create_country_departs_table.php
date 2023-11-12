@@ -18,9 +18,10 @@ class m231110_074734_create_country_departs_table extends Migration
         ]);
 
         $this->createIndex(
-            'idx-country_departs-country_id',
+            'idx-unique-country_departs-country_id-depart',
             'country_departs',
-            'country_id'
+            'country_id, depart',
+            true
         );
 
         $this->addForeignKey(
@@ -44,7 +45,7 @@ class m231110_074734_create_country_departs_table extends Migration
         );
 
         $this->dropIndex(
-            'idx-country_departs-country_id',
+            'idx-unique-country_departs-country_id-depart',
             'country_departs'
         );
 

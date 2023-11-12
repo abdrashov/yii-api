@@ -14,6 +14,6 @@ class CityController extends Controller
 
     public function actionView($id)
     {
-        return response(CityService::find($id));
+        return response($city = CityService::find($id), $city ? 200 : 404);
     }
 }

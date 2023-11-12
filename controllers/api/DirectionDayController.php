@@ -2,7 +2,6 @@
 
 namespace app\controllers\api;
 
-use app\services\CityService;
 use app\services\DirectionDayService;
 use yii\web\Controller;
 

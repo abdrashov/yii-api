@@ -2,7 +2,6 @@
 
 namespace app\services;
 
-use app\models\DirectionDate;
 use app\models\DirectionDay;
 use yii\db\Query;
 
@@ -33,14 +32,6 @@ class DirectionDayService
     public static function insert(int $direction_id, array $days): void
     {
         array_map(fn($day) => (new Query())->createCommand()->insert(DirectionDay::tableName(), [
-            'direction_id' => $direction_id,
-            'day' => $day
-        ])->execute(), $days);
-    }
-
-    public static function updateOrInsert(int $direction_id, array $days): void
-    {
-        array_map(fn($day) => (new Query())->createCommand()->upsert(DirectionDay::tableName(), [
             'direction_id' => $direction_id,
             'day' => $day
         ])->execute(), $days);

@@ -20,7 +20,7 @@ class DirectionController extends Controller
 
     public function actionView($id)
     {
-        return response(DirectionService::find($id));
+        return response($direction = DirectionService::find($id), $direction ? 200 : 404);
     }
 
     public function actionStore()
@@ -42,7 +42,12 @@ class DirectionController extends Controller
             return response($direction->errors + $directionDay->errors + $directionDate->errors, 422);
         }
 
-        $direction = DirectionService::store($request);
+        $direction = DirectionService::store([
+            'city_id' => $request['city_id'],
+            'country_id' => $request['country_id'],
+            'price' => $request['price'],
+            'cur' => $request['cur'],
+        ]);
 
         DirectionDayService::insert($direction['id'], $request['day']);
 

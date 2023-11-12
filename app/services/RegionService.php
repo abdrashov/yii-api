@@ -48,7 +48,6 @@ class RegionService
         return [
             'id' => $region['id'],
             'api_id' => $region['api_id'],
-            'region_id' => $region['region_id'],
             'name' => $region['name'],
             'price' => $region['price'],
             'cur' => $region['cur'],

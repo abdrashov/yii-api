@@ -21,9 +21,23 @@ class RegionHandler
 
         foreach ($this->handler() as $content) {
             if ($region = RegionService::findByApiId($content['api_id'])) {
-                RegionService::update($region, $content);
+                RegionService::update($region, [
+                    'api_id' => $content['api_id'],
+                    'country_id' => $content['country_id'],
+                    'name' => $content['name'],
+                    'price' => $content['price'],
+                    'cur' => $content['cur'],
+                    'popularity' => $content['popularity'],
+                ]);
             } else {
-                RegionService::insert($content);
+                RegionService::insert([
+                    'api_id' => $content['api_id'],
+                    'country_id' => $content['country_id'],
+                    'name' => $content['name'],
+                    'price' => $content['price'],
+                    'cur' => $content['cur'],
+                    'popularity' => $content['popularity'],
+                ]);
             }
         }
     }

@@ -3,15 +3,24 @@
 namespace app\services;
 
 use app\models\Country;
+use Yii;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 
 class CountryService
 {
     public static function get(): array
     {
+        $countries = (new Query)->from(Country::tableName())->all();
+
+        $countryDeparts = CountryDepartService::getByCountryIds(ArrayHelper::getColumn($countries, 'id'));
+
         return array_map(
-            fn($country) => static::normalize($country),
-            (new Query)->from(Country::tableName())->orderBy('sort')->all()
+            fn($country) => static::normalize(
+                $country,
+                array_filter($countryDeparts, fn($countryDepart) => $countryDepart['country_id'] == $country['id']),
+            ),
+            $countries
         );
     }
 
@@ -21,7 +30,11 @@ class CountryService
             ->where(['id' => $id])
             ->one();
 
-        return $country ? static::normalize($country) : [];
+        if (!$country) return [];
+
+        $countryDeparts = CountryDepartService::getByCountryIds([$country['id']]);
+
+        return $country ? static::normalize($country, $countryDeparts) : [];
     }
 
     public static function findByApiId(int $api_id): array
@@ -31,16 +44,11 @@ class CountryService
             ->one() ?: [];
     }
 
-    public static function store(array $request): array
+    public static function store(array $content): array
     {
         $connection = Yii::$app->db;
 
-        $connection->createCommand()->insert(Country::tableName(), [
-            'city_id' => $request['city_id'],
-            'api_id' => $request['api_id'],
-            'name' => $request['name'],
-            'nameTo' => $request['name_to'],
-        ])->execute();
+        $connection->createCommand()->insert(Country::tableName(), $content)->execute();
 
         return static::find($connection->getLastInsertID());
     }
@@ -52,13 +60,14 @@ class CountryService
         ])->execute();
     }
 
-    private static function normalize(array $country): array
+    private static function normalize(array $country, array $departs): array
     {
         return [
             'id' => $country['id'],
             'api_id' => $country['api_id'],
             'name' => $country['name'],
             'nameTo' => $country['name_to'],
+            'departs' => array_values(ArrayHelper::getColumn($departs, 'depart'))
         ];
     }
 }

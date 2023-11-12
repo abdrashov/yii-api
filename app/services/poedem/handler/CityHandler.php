@@ -19,9 +19,19 @@ class CityHandler
 
         foreach ($this->handler() as $content) {
             if ($city = CityService::findByApiId($content['api_id'])) {
-                CityService::update($city, $content);
+                CityService::update($city, [
+                    'api_id' => $content['api_id'],
+                    'name' => $content['name'],
+                    'name_from' => $content['name_from'],
+                    'sort' => $content['sort'],
+                ]);
             } else {
-                CityService::insert($content);
+                CityService::insert([
+                    'api_id' => $content['api_id'],
+                    'name' => $content['name'],
+                    'name_from' => $content['name_from'],
+                    'sort' => $content['sort'],
+                ]);
             }
         }
     }

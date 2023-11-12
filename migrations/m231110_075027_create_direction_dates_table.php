@@ -18,9 +18,10 @@ class m231110_075027_create_direction_dates_table extends Migration
         ]);
 
         $this->createIndex(
-            'idx-direction_dates-direction_id',
+            'idx-unique-direction_dates-direction_id-date',
             'direction_dates',
-            'direction_id'
+            'direction_id, date',
+            true
         );
 
         $this->addForeignKey(
@@ -44,7 +45,7 @@ class m231110_075027_create_direction_dates_table extends Migration
         );
 
         $this->dropIndex(
-            'idx-direction_dates-direction_id',
+            'idx-unique-direction_dates-direction_id-date',
             'direction_dates'
         );
         

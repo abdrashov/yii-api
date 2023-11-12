@@ -14,6 +14,6 @@ class MealController extends Controller
 
     public function actionView($id)
     {
-        return response(MealService::find($id));
+        return response($meal = MealService::find($id), $meal ? 200 : 404);
     }
 }
