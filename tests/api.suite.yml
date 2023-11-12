@@ -1,9 +1,9 @@
 actor: ApiTester
 modules:
-  enabled:
-    - REST:
-        depends: PhpBrowser
-        url: http://ht.local/
-        part: JSON
-  config:
-    - PhpBrowser
+    enabled:
+        - REST:
+              depends: PhpBrowser
+              url: http://ht.local/
+              part: JSON
+    config:
+        - PhpBrowser
