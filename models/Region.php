@@ -2,9 +2,9 @@
 
 namespace app\models;
 
-use yii\db\ActiveRecord;
+use yii\base\Model;
 
-class Region extends ActiveRecord
+class Region extends Model
 {
     public static function tableName()
     {
