@@ -39,12 +39,11 @@ class DirectionHandler
                 ]);
             }
 
-
             DirectionDayService::delete($direction['id']);
-            DirectionDayService::insert($direction['id'], $content['days']);
+            DirectionDayService::insert($direction['id'], array_unique($content['days']));
 
             DirectionDateService::delete($direction['id']);
-            DirectionDateService::insert($direction['id'], $content['dates']);
+            DirectionDateService::insert($direction['id'], array_unique($content['dates']));
         }
     }
 

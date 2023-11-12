@@ -23,7 +23,7 @@ class Direction extends Model
             [['city_id', 'country_id', 'price', 'cur'], 'required'],
             [['city_id', 'country_id'], 'validateUniqueness'],
             [['price'], 'number'],
-            [['cur'], 'string', 'max' => 5],
+            [['cur'], 'string', 'max' => 10],
         ];
     }
 

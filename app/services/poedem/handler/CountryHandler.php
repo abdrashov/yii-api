@@ -38,7 +38,7 @@ class CountryHandler
             }
 
             CountryDepartService::delete($county['id']);
-            CountryDepartService::insert($county['id'], $content['departs']);
+            CountryDepartService::insert($county['id'], array_unique($content['departs']));
         }
     }
 

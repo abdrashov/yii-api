@@ -49,9 +49,9 @@ class DirectionController extends Controller
             'cur' => $request['cur'],
         ]);
 
-        DirectionDayService::insert($direction['id'], $request['day']);
+        DirectionDayService::insert($direction['id'], array_unique($request['day']));
 
-        DirectionDateService::insert($direction['id'], $request['date']);
+        DirectionDateService::insert($direction['id'], array_unique($request['date']));
 
         return response([
             'message' => 'Successful'
