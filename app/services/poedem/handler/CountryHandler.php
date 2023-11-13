@@ -16,8 +16,6 @@ class CountryHandler
 
     public function apply(): void
     {
-        $this->handler();
-
         foreach ($this->handler() as $content) {
             if ($county = CountryService::findByApiId($content['api_id'])) {
                 CountryService::update($county, [

@@ -15,8 +15,6 @@ class CityHandler
 
     public function apply(): void
     {
-        $this->handler();
-
         foreach ($this->handler() as $content) {
             if ($city = CityService::findByApiId($content['api_id'])) {
                 CityService::update($city, [

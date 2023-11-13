@@ -17,8 +17,6 @@ class RegionHandler
 
     public function apply(): void
     {
-        $this->handler();
-
         foreach ($this->handler() as $content) {
             if ($region = RegionService::findByApiId($content['api_id'])) {
                 RegionService::update($region, [

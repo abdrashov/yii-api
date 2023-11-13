@@ -20,8 +20,6 @@ class DirectionHandler
 
     public function apply(): void
     {
-        $this->handler();
-
         foreach ($this->handler() as $content) {
             if ($direction = DirectionService::findByCityIdCountryId($content['city_id'], $content['country_id'])) {
                 DirectionService::update($direction, [

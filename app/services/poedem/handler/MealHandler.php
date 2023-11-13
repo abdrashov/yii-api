@@ -15,8 +15,6 @@ class MealHandler
 
     public function apply(): void
     {
-        $this->handler();
-
         foreach ($this->handler() as $content) {
             if ($meal = MealService::findByApiId($content['api_id'])) {
                 MealService::update($meal, [
